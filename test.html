@@ -1,0 +1,153 @@
+<!--
+
+To run this demo, you need to replace 'YOUR_ACCESS_TOKEN' with an access token from ArcGIS that has the correct privileges.
+
+To get started, sign up for a free ArcGIS Location Platform account or a free trial of ArcGIS Online and create developer credentials.
+
+https://developers.arcgis.com/documentation/security-and-authentication/get-started/
+
+-->
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>ArcGIS Maps SDK for JavaScript Tutorials: Add a point, line, and polygon</title>
+
+    <style>
+      html,
+      body,
+      arcgis-map {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+
+    <script>
+      var esriConfig = {
+        apiKey: "YOUR_ACCESS_TOKEN"
+      };
+    </script>
+
+    <!-- Load Calcite components from CDN -->
+    <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/2.13.2/calcite.css" />
+    <script type="module" src="https://js.arcgis.com/calcite-components/2.13.2/calcite.esm.js"></script>
+
+    <!-- Load the ArcGIS Maps SDK for JavaScript from CDN -->
+    <link rel="stylesheet" href="https://js.arcgis.com/4.31/esri/themes/light/main.css" />
+    <script src="https://js.arcgis.com/4.31/"></script>
+
+    <!-- Load Map components from CDN-->
+    <script
+      type="module"
+      src="https://js.arcgis.com/map-components/4.31/arcgis-map-components.esm.js"
+    ></script>
+
+  </head>
+  <body>
+    <arcgis-map basemap="osm" center="78.18, 1.83" zoom="13">
+      <arcgis-zoom position="top-left"></arcgis-zoom>
+    </arcgis-map>
+
+    <script>
+      require(["esri/Graphic", "esri/layers/GraphicsLayer"], (Graphic, GraphicsLayer) => {
+
+        const arcgisMap = document.querySelector("arcgis-map");
+
+        arcgisMap.addEventListener("arcgisViewReadyChange", () => {
+
+          const graphicsLayer = new GraphicsLayer();
+          arcgisMap.addLayer(graphicsLayer);
+
+          const point = {
+            //Create a point
+            type: "point",
+            longitude: -118.80657463861,
+            latitude: 34.0005930608889
+          };
+          const simpleMarkerSymbol = {
+            type: "simple-marker",
+            color: [226, 119, 40], // Orange
+            outline: {
+              color: [255, 255, 255], // White
+              width: 1
+            }
+          };
+
+          const pointGraphic = new Graphic({
+            geometry: point,
+            symbol: simpleMarkerSymbol
+          });
+          graphicsLayer.add(pointGraphic);
+
+          // Create a line geometry
+          const polyline = {
+            type: "polyline",
+            paths: [
+              [-118.821527826096, 34.0139576938577], //Longitude, latitude
+              [-118.814893761649, 34.0080602407843], //Longitude, latitude
+              [-118.808878330345, 34.0016642996246] //Longitude, latitude
+            ]
+          };
+          const simpleLineSymbol = {
+            type: "simple-line",
+            color: [226, 119, 40], // Orange
+            width: 2
+          };
+
+          const polylineGraphic = new Graphic({
+            geometry: polyline,
+            symbol: simpleLineSymbol
+          });
+          graphicsLayer.add(polylineGraphic);
+
+          // Create a polygon geometry
+          const polygon = {
+            type: "polygon",
+            rings: [
+              [-118.818984489994, 34.0137559967283], //Longitude, latitude
+              [-118.806796597377, 34.0215816298725], //Longitude, latitude
+              [-118.791432890735, 34.0163883241613], //Longitude, latitude
+              [-118.79596686535, 34.008564864635], //Longitude, latitude
+              [-118.808558110679, 34.0035027131376] //Longitude, latitude
+            ]
+          };
+
+          const simpleFillSymbol = {
+            type: "simple-fill",
+            color: [227, 139, 79, 0.8], // Orange, opacity 80%
+            outline: {
+              color: [255, 255, 255],
+              width: 1
+            }
+          };
+
+          const popupTemplate = {
+            title: "{Name}",
+            content: "{Description}"
+          };
+          const attributes = {
+            Name: "Graphic",
+            Description: "I am a polygon"
+          };
+
+          const polygonGraphic = new Graphic({
+            geometry: polygon,
+            symbol: simpleFillSymbol,
+
+            attributes: attributes,
+            popupTemplate: popupTemplate
+
+          });
+          graphicsLayer.add(polygonGraphic);
+
+        });
+
+      });
+
+    </script>
+
+  </body>
+</html>
